@@ -1,0 +1,198 @@
+#include <iostream>
+#include <string>
+#include <locale> 
+
+using namespace std;
+
+// Función para limpiar el buffer al encontrar el \n para el próxima getline
+void limpiarBuffer() {
+    cin.ignore(1000, '\n'); 
+}
+
+// ESTRUCTURAS DE DATOS
+
+// 1 Paciente - Lista 
+struct Paciente {
+    string nombre;
+    string dni;
+    int edad;
+    Paciente *siguiente;
+};
+
+// 2 Cita - Cola
+struct Cita {
+    string nombre;
+    string especialidad;
+    Cita *siguiente;
+};
+
+// 3 CasoClinicoActivo - Pila 
+struct CasoClinicoActivo {
+    string dniPaciente;        
+    string diagnosticoPreliminar; 
+    CasoClinicoActivo *siguiente;
+};
+
+// Funciones de la COLA para atender citas
+
+// Ver siguiente cita
+void verProximaCita(Cita* inicio) {
+    if (inicio == NULL) {
+        cout << "La cola de citas esta vacia. No hay citas en espera." << endl;
+        return;
+    }
+    cout << "\n>>> SIGUIENTE CITA <<<" << endl;
+    cout << "Paciente: " << inicio->nombre << endl;
+    cout << "Especialidad: " << inicio->especialidad << endl;
+}
+
+
+// Se atiende la primera cita para DESENCOLAR
+void atenderCita(Cita* &inicio, Cita* &fin) {
+    if (inicio == NULL) {
+        cout << "La cola de citas esta vacia. No hay citas para atender." << endl;
+        return;
+    }
+
+    Cita *p = inicio; 
+    cout << "Atendiendo cita de: " << p->nombre << " para " << p->especialidad << " (DESENCOLAR)." << endl;
+    inicio = inicio->siguiente;
+    if (inicio == NULL) fin = NULL; 
+
+    delete p;
+}
+
+//Función para registrar en una LISTA y a la vez ENCOLAR 
+
+void registrarPaciente(Paciente* &inicio, Cita* &inicioCola, Cita* &finCola) {
+    
+    // P1: Registrar paciente en la LISTA 
+    Paciente *nuevo = new Paciente();
+    cout << "\n--- 1. REGISTRAR NUEVO PACIENTE ---\n";
+    cout << "Nombre: "; getline(cin >> ws, nuevo->nombre);
+    cout << "DNI: "; getline(cin, nuevo->dni);
+    cout << "Edad: "; cin >> nuevo->edad;
+    // Se agrega a la lista enlazada
+    nuevo->siguiente = inicio;
+    inicio = nuevo;
+    cout << "Paciente " << nuevo->nombre << " registrado en el sistema." << endl;
+    
+    // P2: Asignar cita para la COLA
+    Cita *nuevaCita = new Cita();
+    nuevaCita->nombre = nuevo->nombre; 
+    
+    // Se solicita la información adicional necesaria para la Cita
+    limpiarBuffer(); 
+    cout << "\n--- 2. ASIGNAR PRIMERA CITA ---\n";
+    cout << "¿Especialidad o motivo de la Cita?: "; 
+	getline(cin, nuevaCita->especialidad);
+    nuevaCita->siguiente = NULL; 
+
+    // Logica de ENCOLAR
+    if (inicioCola == NULL) {
+        inicioCola = nuevaCita;
+        finCola = nuevaCita;
+    } else {
+        finCola->siguiente = nuevaCita;
+        finCola = nuevaCita;
+    }
+    cout << "Cita automatica para " << nuevaCita->nombre << " registrada en la Cola de espera." << endl;
+}
+
+// Funcion de PILA para los casos clínicos
+
+// Se procede a la ASIGNACION de memoria
+void iniciarCasoActivo(CasoClinicoActivo* &tope) {
+    CasoClinicoActivo *nuevoCaso = new CasoClinicoActivo();
+    cout << "\n--- INICIAR CASO CLINICO (ASIGNAR) ---\n";
+    cout << "DNI del Paciente: "; getline(cin >> ws, nuevoCaso->dniPaciente);
+    cout << "Diagnostico Preliminar: "; getline(cin, nuevoCaso->diagnosticoPreliminar);
+    
+    nuevoCaso->siguiente = tope;
+    tope = nuevoCaso;
+    
+    cout << "Caso del DNI " << nuevoCaso->dniPaciente 
+         << " iniciado y en foco de atencion (Asignacion de 'Memoria')." << endl;
+}
+
+// Se procede a la LIBERACION de memoria
+void cerrarCasoActivo(CasoClinicoActivo* &tope) {
+    if (tope == NULL) {
+        cout << "La pila de casos activos esta vacia. No hay casos para cerrar." << endl;
+        return;
+    }
+    
+    CasoClinicoActivo *p = tope;
+    cout << "Caso del DNI " << p->dniPaciente 
+         << " cerrado (Liberacion)." << endl;
+    tope = tope->siguiente;
+    delete p;
+}
+
+// FUNCION MAIN
+
+int main() {
+    setlocale(LC_ALL, "Spanish"); 
+    
+    Paciente *inicioLista = NULL; 
+    Cita *inicioCola = NULL; 
+    Cita *finCola = NULL; 
+    CasoClinicoActivo *topePilaCasos = NULL; 
+    int opcion;
+
+    do {
+        cout << "\n========= FRAGMENTO FUNCIONAL (SOPORTE ESPANOL) =========";
+        cout << "\n1. Registrar Paciente y Asignar Cita (Lista y Enconlar)";
+        cout << "\n2. Atender Proxima Cita (Desencolar)";
+        cout << "\n3. Ver Proxima Cita (Mostrar)"; 
+        cout << "\n4. Seguimiento de Casos Clinicos (Pila)";
+        cout << "\n5. Salir";
+        cout << "\nSeleccione una opcion: ";
+        if (!(cin >> opcion)) { 
+             cin.clear(); 
+			 limpiarBuffer();
+			 opcion = 0;
+        }
+
+        switch(opcion) {
+            case 1: 
+                registrarPaciente(inicioLista, inicioCola, finCola);
+                break;
+            case 2: 
+                atenderCita(inicioCola, finCola); 
+                break;
+            case 3: 
+                verProximaCita(inicioCola);
+                break;
+            case 4: { 
+                int op_casos;
+                do {
+                    cout << "\n--- MODULO SEGUIMIENTO DE CASOS ---";
+                    cout << "\n1. Iniciar Caso Clinico (ASIGNAR)";
+                    cout << "\n2. Cerrar Caso Clinico (LIBERAR)";
+                    cout << "\n3. Volver al menu principal";
+                    cout << "\nSeleccione una opcion: ";
+                    if (!(cin >> op_casos)) {
+                         cin.clear(); 
+						 limpiarBuffer(); 
+						 op_casos = 0;
+                    }
+                    limpiarBuffer();
+                    
+                    switch(op_casos) {
+                        case 1: iniciarCasoActivo(topePilaCasos); break;
+                        case 2: cerrarCasoActivo(topePilaCasos); break;
+                    }
+                } while (op_casos != 3);
+                break;
+            }
+            case 5:
+                cout << "\nSaliendo del fragmento... Adios!\n";
+                break;
+            default:
+                cout << "Opcion invalida." << endl;
+        }
+    } while (opcion != 5);
+
+    return 0;
+}
