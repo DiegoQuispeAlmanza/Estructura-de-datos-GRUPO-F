@@ -237,7 +237,8 @@ int main() {
                     cout << "\n--- MODULO SEGUIMIENTO DE CASOS ---";
                     cout << "\n1. Iniciar Caso Clinico (ASIGNAR)";
                     cout << "\n2. Cerrar Caso Clinico (LIBERAR)";
-                    cout << "\n3. Volver al menu principal";
+                    cout << "\n3. Buscar Caso Activo por DNI";
+                    cout << "\n4. Volver al menu principal";
                     cout << "\nSeleccione una opcion: ";
                     if (!(cin >> op_casos)) {
                          cin.clear(); 
