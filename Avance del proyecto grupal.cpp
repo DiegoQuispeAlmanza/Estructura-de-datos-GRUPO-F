@@ -207,7 +207,7 @@ int main() {
     int opcion;
 
     do {
-        cout << "\n========= FRAGMENTO FUNCIONAL (SOPORTE ESPANOL) =========";
+        cout << "\n========= Sistema de clinica =========";
         cout << "\n1. Registrar Paciente y Asignar Cita (Lista y Enconlar)";
         cout << "\n2. Atender Proxima Cita (Desencolar)";
         cout << "\n3. Ver Proxima Cita (Mostrar)"; 
