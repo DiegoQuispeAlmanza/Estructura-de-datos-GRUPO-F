@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Funci髇 para limpiar el buffer al encontrar el \n para el pr髕ima getline
+// Funci贸n para limpiar el buffer al encontrar el \n para el pr贸xima getline
 void limpiarBuffer() {
     cin.ignore(1000, '\n'); 
 }
@@ -62,7 +62,38 @@ void atenderCita(Cita* &inicio, Cita* &fin) {
     delete p;
 }
 
-//Funci髇 para registrar en una LISTA y a la vez ENCOLAR 
+// Funci贸n para buscar paciente por DNI en la LISTA ENLAZADA
+void buscarPacientePorDNI(Paciente* inicio) {
+    if (inicio == NULL) {
+        cout << "no hay pacientes registrados" << endl;
+        return;
+    }
+
+    string dniBuscado;
+    cout << "\n========== BUSCAR PACIENTE POR DNI ==========\n";
+    cout << "Ingresa el DNI del paciente que deseas buscar: ";
+    getline(cin >> ws, dniBuscado);
+
+    Paciente* actual = inicio;
+    bool encontrado = false;
+
+    while (actual != NULL) {
+        if (actual->dni == dniBuscado) {
+            cout << "\n----- PACIENTE ENCONTRADO ---" << endl;
+            cout << "Nombre: " << actual->nombre << endl;
+            cout << "DNI: " << actual->dni << endl;
+            cout << "Edad: " << actual->edad << endl;
+            encontrado = true;
+            break;
+        }
+        actual = actual->siguiente;
+    }
+
+    if (!encontrado)
+        cout << "No se encontro al paciente" << endl;
+}
+
+//Funci贸n para registrar en una LISTA y a la vez ENCOLAR 
 
 void registrarPaciente(Paciente* &inicio, Cita* &inicioCola, Cita* &finCola) {
     
@@ -81,10 +112,10 @@ void registrarPaciente(Paciente* &inicio, Cita* &inicioCola, Cita* &finCola) {
     Cita *nuevaCita = new Cita();
     nuevaCita->nombre = nuevo->nombre; 
     
-    // Se solicita la informaci髇 adicional necesaria para la Cita
+    // Se solicita la informaci贸n adicional necesaria para la Cita
     limpiarBuffer(); 
     cout << "\n--- 2. ASIGNAR PRIMERA CITA ---\n";
-    cout << "縀specialidad o motivo de la Cita?: "; 
+    cout << "驴Especialidad o motivo de la Cita?: "; 
 	getline(cin, nuevaCita->especialidad);
     nuevaCita->siguiente = NULL; 
 
@@ -99,7 +130,7 @@ void registrarPaciente(Paciente* &inicio, Cita* &inicioCola, Cita* &finCola) {
     cout << "Cita automatica para " << nuevaCita->nombre << " registrada en la Cola de espera." << endl;
 }
 
-// Funcion de PILA para los casos cl韓icos
+// Funcion de PILA para los casos cl铆nicos
 
 // Se procede a la ASIGNACION de memoria
 void iniciarCasoActivo(CasoClinicoActivo* &tope) {
@@ -146,7 +177,8 @@ int main() {
         cout << "\n2. Atender Proxima Cita (Desencolar)";
         cout << "\n3. Ver Proxima Cita (Mostrar)"; 
         cout << "\n4. Seguimiento de Casos Clinicos (Pila)";
-        cout << "\n5. Salir";
+		cout << "\n5. Buscar Paciente por DNI";
+        cout << "\n6. Salir";
         cout << "\nSeleccione una opcion: ";
         if (!(cin >> opcion)) { 
              cin.clear(); 
@@ -187,12 +219,15 @@ int main() {
                 break;
             }
             case 5:
-                cout << "\nSaliendo del fragmento... Adios!\n";
+                buscarPacientePorDNI(inicioLista);
                 break;
+			case 6:
+			cout << "\nSaliendo del fragmento... Adios!\n";
             default:
                 cout << "Opcion invalida." << endl;
         }
-    } while (opcion != 5);
+    } while (opcion != 6);
 
     return 0;
 }
+
