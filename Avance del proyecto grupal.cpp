@@ -115,7 +115,7 @@ void registrarPaciente(Paciente* &inicio, Cita* &inicioCola, Cita* &finCola) {
     // Se solicita la información adicional necesaria para la Cita
     limpiarBuffer(); 
     cout << "\n--- 2. ASIGNAR PRIMERA CITA ---\n";
-    cout << "¿Especialidad o motivo de la Cita?: "; 
+    cout << "�Especialidad o motivo de la Cita?: "; 
 	getline(cin, nuevaCita->especialidad);
     nuevaCita->siguiente = NULL; 
 
