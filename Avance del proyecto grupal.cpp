@@ -160,6 +160,41 @@ void cerrarCasoActivo(CasoClinicoActivo* &tope) {
     delete p;
 }
 
+// Función para buscar un caso activo por DNI 
+void buscarCasoActivoPorDNI(CasoClinicoActivo* tope) {
+    if (tope == NULL) {
+        cout << "\nLa pila de casos activos esta vacia. No hay casos en seguimiento." << endl;
+        return;
+    }
+
+    string dniBuscado;
+    cout << "\n--- BUSCAR CASO ACTIVO POR DNI ---\n";
+    cout << "Ingresa el DNI del paciente cuyo caso buscas: ";
+
+    getline(cin >> ws, dniBuscado); 
+
+    CasoClinicoActivo* actual = tope;
+    bool encontrado = false;
+    int posicion = 1; 
+
+    while (actual != NULL) {
+        if (actual->dniPaciente == dniBuscado) {
+            cout << "\n----- CASO ACTIVO ENCONTRADO -----" << endl;
+            cout << "DNI: " << actual->dniPaciente << endl;
+            cout << "Diagnostico Preliminar: " << actual->diagnosticoPreliminar << endl;
+            cout << "Posicion en la Pila (Profundidad): " << posicion << " (Tope es 1)" << endl;
+            encontrado = true;
+            break; 
+        }
+        actual = actual->siguiente; 
+        posicion++;
+    }
+
+    if (!encontrado) {
+        cout << "No se encontro un caso activo para el DNI " << dniBuscado << "." << endl;
+    }
+}
+
 // FUNCION MAIN
 
 int main() {
@@ -214,8 +249,11 @@ int main() {
                     switch(op_casos) {
                         case 1: iniciarCasoActivo(topePilaCasos); break;
                         case 2: cerrarCasoActivo(topePilaCasos); break;
+                        case 3: buscarCasoActivoPorDNI(topePilaCasos); break; 
+						case 4: break; 
+						default: cout << "Opcion invalida." << endl;
                     }
-                } while (op_casos != 3);
+                } while (op_casos != 4);
                 break;
             }
             case 5:
