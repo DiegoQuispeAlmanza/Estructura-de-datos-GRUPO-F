@@ -1,6 +1,6 @@
 Algoritmo Lista_Enlazada_Pacientes
 	Definir opcion, i, total Como Entero
-	Definir pacienteNombre, pacienteDNI Como Cadena
+	Definir pacienteNombre, pacienteDNI, buscarDNI Como Cadena
 	Definir pacienteEdad Como Entero
 	// lista enlazada con arreglos paralelos
 	Dimensionar nombres(100)
@@ -15,10 +15,11 @@ Algoritmo Lista_Enlazada_Pacientes
 		Escribir '===== SISTEMA DE PACIENTES (LISTA ENLAZADA) ====='
 		Escribir '1. Agregar paciente'
 		Escribir '2. Mostrar lista'
-		Escribir '3. Salir'
-		Escribir 'Seleccione una opción: 'Sin Saltar
+		Escribir '3. Buscar paciente por Dni'
+		Escribir '4. Salir'
+		Escribir 'Seleccione una opciÃ³n: 'Sin Saltar
 		Leer opcion
-		Según opcion Hacer
+		SegÃºn opcion Hacer
 			1:
 				Limpiar Pantalla
 				Escribir 'Ingrese nombre del paciente: 'Sin Saltar
@@ -57,10 +58,39 @@ Algoritmo Lista_Enlazada_Pacientes
 				FinSi
 				Esperar Tecla
 			3:
+				Limpiar Pantalla
+				Escribir '===== BUSCAR PACIENTE POR DNI ====='
+				Si primero = 0 Entonces
+					Escribir 'No hay pacientes registrados para buscar.'
+				SiNo
+					Escribir 'Ingresa el DNI del paciente que deseas buscar: ' Sin Saltar
+					Leer buscarDNI
+					i <- primero
+					encontrado <- Falso
+					Mientras i <> 0 Hacer
+						Si dnis[i] = buscarDNI Entonces
+							Escribir 'Paciente encontrado:'
+							Escribir 'Nombre: ', nombres[i]
+							Escribir 'DNI: ', dnis[i]
+							Escribir 'Edad: ', edades[i]
+							encontrado <- Verdadero
+							i <- 0
+						SiNo
+							i <- siguiente[i]
+						FinSi
+					FinMientras
+					Si No encontrado Entonces
+						Escribir 'No se encontro al paciente'
+					FinSi
+				FinSi
+				Esperar Tecla
+
+			4:
 				Escribir 'Saliendo del sistema...'
 			De Otro Modo:
-				Escribir 'Opción inválida.'
+				Escribir 'OpciÃ³n invÃ¡lida.'
 				Esperar Tecla
-		FinSegún
+		FinSegÃºn
 	Hasta Que opcion=3
 FinAlgoritmo
+
